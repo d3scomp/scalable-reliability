@@ -42,7 +42,7 @@ module Human {
 		
 		positionReporter: PositionReporter {
 			parameters:
-			    periodMs = 20;   
+			    periodMs = 20;
 		}
 	
 	connections allowunconnected:        	

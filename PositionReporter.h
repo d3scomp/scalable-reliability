@@ -29,6 +29,7 @@ protected:
     virtual void handleMessage(cMessage *msg);
 
 private:
+    int periodMs;
     cMessage event;
 };
 

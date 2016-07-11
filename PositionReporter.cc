@@ -19,6 +19,9 @@ Define_Module(PositionReporter);
 
 void PositionReporter::initialize() {
     std::cout << "Position reporter - initialize" << std::endl;
+    // Get parameters
+    periodMs = par("periodMs");
+
     // Schedule first reporting event
     this->scheduleAt(0, &event);
 }
@@ -30,6 +33,6 @@ void PositionReporter::handleMessage(cMessage *msg) {
         std::cout << "Position reporter - event" << std::endl;
 
         // Schedule next position reporting event
-        this->scheduleAt(simTime() + SimTime(20, SIMTIME_MS), &event);
+        this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), &event);
     }
 }
