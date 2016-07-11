@@ -35,7 +35,7 @@ module Human {
 			    alpha = 0.5;
 			    variance = 1.5;
 		    	margin = 10m;
-		    	speed = 1mps;		    
+		    	speed = 1mps;
 		}
 		
 		nic802154: Ieee802154NarrowbandNic {}

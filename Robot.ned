@@ -35,7 +35,7 @@ module Robot {
 			    alpha = 0.5;
 		    	variance = 2;
 		    	margin = 5m;
-		    	speed = 5mps;	    	
+		    	speed = 5mps;
 		}
 		
 		nic802154: Ieee802154NarrowbandNic {}
