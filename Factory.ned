@@ -22,10 +22,6 @@ network Factory
         int numRobots;
         int numHumans;
 
-//		double playgroundSizeX @unit(m) = default(50m);
-//      double playgroundSizeY @unit(m) = default(50m);
-//      double playgroundSizeZ @unit(m) = default(10m);
-
         @display("bgb=50,50");
     submodules:
         environment: PhysicalEnvironment {
@@ -44,12 +40,5 @@ network Factory
             @display("p=291,60");
         }
 
-//        channelControl: ChannelControl
-//        {
-//            parameters:
-//                @display("p=60,50");
-//        }
-
 	connections allowunconnected:
-
 }

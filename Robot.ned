@@ -20,11 +20,11 @@ import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
 // Robot
 //
 module Robot {
-    parameters:
-        @node;
-        @networkNode();
+	parameters:
+		@node;
+		@networkNode();
         
-    gates:
+	gates:
 		input radio80211In @directIn;
 		input radio802154In @directIn;
 		inout direct[];
