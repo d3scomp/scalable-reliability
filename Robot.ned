@@ -38,7 +38,7 @@ module Robot {
 		    	speed = 5mps;	    	
 		}
 		
-	//	nic802154: Ieee802154NarrowbandNic {}
+		nic802154: Ieee802154NarrowbandNic {}
 	
 	connections allowunconnected:
 }

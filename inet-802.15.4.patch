@@ -1,0 +1,39 @@
+diff -Naur inet.verbatim/src/inet/physicallayer/apskradio/bitlevel/errormodel/APSKLayeredErrorModel.cc inet.patched/src/inet/physicallayer/apskradio/bitlevel/errormodel/APSKLayeredErrorModel.cc
+--- inet.verbatim/src/inet/physicallayer/apskradio/bitlevel/errormodel/APSKLayeredErrorModel.cc	2015-10-26 15:20:18.000000000 +0100
++++ inet.patched/src/inet/physicallayer/apskradio/bitlevel/errormodel/APSKLayeredErrorModel.cc	2015-11-20 11:29:41.867786338 +0100
+@@ -79,7 +79,7 @@
+ 
+ const IReceptionSampleModel *APSKLayeredErrorModel::computeSampleModel(const LayeredTransmission *transmission, const ISNIR *snir) const
+ {
+-    throw cRuntimeError("Not yet implemented");
++    throw cRuntimeError("Not yet implemented AAA");
+ }
+ 
+ } // namespace physicallayer
+diff -Naur inet.verbatim/src/inet/physicallayer/base/packetlevel/APSKModulationBase.cc inet.patched/src/inet/physicallayer/base/packetlevel/APSKModulationBase.cc
+--- inet.verbatim/src/inet/physicallayer/base/packetlevel/APSKModulationBase.cc	2015-10-26 15:20:18.000000000 +0100
++++ inet.patched/src/inet/physicallayer/base/packetlevel/APSKModulationBase.cc	2015-11-19 15:33:25.452588663 +0100
+@@ -31,8 +31,8 @@
+ 
+ APSKModulationBase::APSKModulationBase(const std::vector<APSKSymbol> *constellation) :
+     constellation(constellation),
+-    codeWordSize(log2(constellation->size())),
+-    constellationSize(constellation->size())
++    codeWordSize(log2(constellation?constellation->size():0)),
++    constellationSize(constellation?constellation->size():0)
+ {
+ }
+ 
+diff -Naur inet.verbatim/src/inet/physicallayer/modulation/DSSSOQPSK16Modulation.cc inet.patched/src/inet/physicallayer/modulation/DSSSOQPSK16Modulation.cc
+--- inet.verbatim/src/inet/physicallayer/modulation/DSSSOQPSK16Modulation.cc	2015-10-26 15:20:18.000000000 +0100
++++ inet.patched/src/inet/physicallayer/modulation/DSSSOQPSK16Modulation.cc	2015-11-24 18:58:17.503835659 +0100
+@@ -69,7 +69,8 @@
+ 
+ double DSSSOQPSK16Modulation::calculateSER(double snir, Hz bandwidth, bps bitrate) const
+ {
+-    throw cRuntimeError("Not yet implemented");
++    return 0.01;//0.75;
++    //throw cRuntimeError("Not yet implemented BBB");
+ }
+ 
+ } // namespace physicallayer

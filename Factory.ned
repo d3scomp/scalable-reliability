@@ -50,4 +50,6 @@ network Factory
 //                @display("p=60,50");
 //        }
 
+	connections allowunconnected:
+
 }
