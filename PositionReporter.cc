@@ -19,10 +19,17 @@ Define_Module(PositionReporter);
 
 void PositionReporter::initialize() {
     std::cout << "Position reporter - initialize" << std::endl;
-    // TODO - Generated method body
+    // Schedule first reporting event
+    this->scheduleAt(0, &event);
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
-    std::cout << "Position reporter - handle message" << std::endl;
-    // TODO - Generated method body
+    // React to custom event
+    if(msg == &event) {
+        // TODO: Broadcast position
+        std::cout << "Position reporter - event" << std::endl;
+
+        // Schedule next position reporting event
+        this->scheduleAt(simTime() + SimTime(20, SIMTIME_MS), &event);
+    }
 }

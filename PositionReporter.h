@@ -21,13 +21,15 @@
 using namespace omnetpp;
 
 /**
- * TODO - Generated class
+ Position reporter
  */
-class PositionReporter : public cSimpleModule
-{
-  protected:
+class PositionReporter : public cSimpleModule {
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+private:
+    cMessage event;
 };
 
 #endif
