@@ -16,34 +16,32 @@
 import inet.environment.common.PhysicalEnvironment;
 import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
 
-network Factory {
-	parameters:
-		int numRobots;
-		int numHumans;
-		
+network Factory
+{
+    parameters:
+        int numRobots;
+        int numHumans;
+
 //		double playgroundSizeX @unit(m) = default(50m);
 //      double playgroundSizeY @unit(m) = default(50m);
 //      double playgroundSizeZ @unit(m) = default(10m);
 
-	submodules:
-		environment: PhysicalEnvironment {
-			parameters:
-				@display("p=0,0");
-		}
-		
-		radioMedium: Ieee802154NarrowbandScalarRadioMedium {
-			parameters:
-				@display("p=50,50");
-        }
-        
-		robots[numRobots]: Robot {
-//			parameters:
-//				@display("r=,,#707070");
+        @display("bgb=50,50");
+    submodules:
+        environment: PhysicalEnvironment {
+            parameters:
+                @display("p=0,0");
         }
 
-		humans[numHumans]: Human {
-//			parameters:
-//				@display("r=,,#707070");
+        radioMedium: Ieee802154NarrowbandScalarRadioMedium {
+            parameters:
+                @display("p=50,50");
+        }
+
+        robots[numRobots]: Robot;
+
+        humans[numHumans]: Human {
+            @display("p=291,60");
         }
 
 //        channelControl: ChannelControl
@@ -52,8 +50,4 @@ network Factory {
 //                @display("p=60,50");
 //        }
 
-//        configurator: IPv4NetworkConfigurator
-//        {
-//            @display("p=140,50");
-//        }
 }
