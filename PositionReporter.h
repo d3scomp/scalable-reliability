@@ -13,37 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import inet.mobility.single.GaussMarkovMobility;
-import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
+#ifndef __SCALABLE_RELIABILITY_POSITIONREPORTER_H_
+#define __SCALABLE_RELIABILITY_POSITIONREPORTER_H_
 
-//
-// Human
-//
-module Human {
-	parameters:
-		@node;
-		@networkNode();
-        
-	gates:
-		input radio80211In @directIn;
-		input radio802154In @directIn;
-		inout direct[];
-		
-	submodules:
-		mobility: GaussMarkovMobility {
-			parameters:
-			    alpha = 0.5;
-			    variance = 1.5;
-		    	margin = 10m;
-		    	speed = 1mps;
-		}
-		
-		nic802154: Ieee802154NarrowbandNic {}
-		
-		positionReporter: PositionReporter {
-			parameters:
-			    periodMs = 20;   
-		}
-	
-	connections allowunconnected:        	
-}
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+/**
+ * TODO - Generated class
+ */
+class PositionReporter : public cSimpleModule
+{
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+#endif

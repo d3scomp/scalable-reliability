@@ -30,7 +30,7 @@ PROJECTRELATIVE_PATH =
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/Human.o $O/Robot.o
+OBJS = $O/PositionReporter.o
 
 # Message files
 MSGFILES =
@@ -130,8 +130,6 @@ depend:
 	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
-$O/Human.o: Human.cc \
-	Human.h
-$O/Robot.o: Robot.cc \
-	Robot.h
+$O/PositionReporter.o: PositionReporter.cc \
+	PositionReporter.h
 

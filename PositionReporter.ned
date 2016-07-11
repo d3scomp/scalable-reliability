@@ -13,37 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import inet.mobility.single.GaussMarkovMobility;
-import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
-
 //
-// Human
+// Position reporting module
 //
-module Human {
-	parameters:
-		@node;
-		@networkNode();
-        
-	gates:
-		input radio80211In @directIn;
-		input radio802154In @directIn;
-		inout direct[];
-		
-	submodules:
-		mobility: GaussMarkovMobility {
-			parameters:
-			    alpha = 0.5;
-			    variance = 1.5;
-		    	margin = 10m;
-		    	speed = 1mps;
-		}
-		
-		nic802154: Ieee802154NarrowbandNic {}
-		
-		positionReporter: PositionReporter {
-			parameters:
-			    periodMs = 20;   
-		}
-	
-	connections allowunconnected:        	
+simple PositionReporter {
+    parameters:
+        int periodMs;
 }
