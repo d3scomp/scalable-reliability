@@ -36,3 +36,10 @@ void PositionReporter::handleMessage(cMessage *msg) {
         this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), &event);
     }
 }
+
+void PositionReporter::deleteModule() {
+    // Ensure we are not deleting scheduled event
+    cancelEvent(&event);
+    cSimpleModule::deleteModule();
+}
+

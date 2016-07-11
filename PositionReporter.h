@@ -27,6 +27,7 @@ class PositionReporter : public cSimpleModule {
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void deleteModule();
 
 private:
     int periodMs;
