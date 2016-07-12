@@ -32,6 +32,8 @@ protected:
 private:
     int periodMs;
     cMessage event;
+
+    void handleTimerEvent(cMessage *msg);
 };
 
 #endif

@@ -33,30 +33,35 @@ void PositionReporter::initialize() {
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
-    // React to custom event
     if(msg == &event) {
-        // Get position and time
-        inet::IMobility *mobility = check_and_cast<inet::IMobility *>(getParentModule()->getSubmodule("mobility"));
-        inet::Coord position = mobility->getCurrentPosition();
-        SimTime time = simTime();
-
-        // Construct packet
-        PositionPacket *packet = new PositionPacket();
-        packet->setX(position.x);
-        packet->setY(position.y);
-        packet->setTime(time.dbl());
-
-        // Attach destination address
-        inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
-        ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
-        packet->setControlInfo(ctrl);
-
-        // Send packet
-        send(packet, findGate("lower802154LayerOut"));
-
-        // Schedule next position reporting event
-        this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), &event);
+        handleTimerEvent(msg);
+    } else {
+        delete msg;
     }
+}
+
+void PositionReporter::handleTimerEvent(cMessage *msg) {
+    // Get position and time
+    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(getParentModule()->getSubmodule("mobility"));
+    inet::Coord position = mobility->getCurrentPosition();
+    SimTime time = simTime();
+
+    // Construct packet
+    PositionPacket *packet = new PositionPacket();
+    packet->setX(position.x);
+    packet->setY(position.y);
+    packet->setTime(time.dbl());
+
+    // Attach destination address
+    inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
+    ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
+    packet->setControlInfo(ctrl);
+
+    // Send packet
+    send(packet, findGate("lower802154LayerOut"));
+
+    // Schedule next position reporting event
+    this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), msg);
 }
 
 void PositionReporter::deleteModule() {
