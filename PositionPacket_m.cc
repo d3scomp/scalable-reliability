@@ -165,6 +165,7 @@ Register_Class(PositionPacket);
 
 PositionPacket::PositionPacket(const char *name, int kind) : ::omnetpp::cPacket(name,kind)
 {
+    this->id = 0;
     this->x = 0;
     this->y = 0;
     this->time = 0;
@@ -189,6 +190,7 @@ PositionPacket& PositionPacket::operator=(const PositionPacket& other)
 
 void PositionPacket::copy(const PositionPacket& other)
 {
+    this->id = other.id;
     this->x = other.x;
     this->y = other.y;
     this->time = other.time;
@@ -197,6 +199,7 @@ void PositionPacket::copy(const PositionPacket& other)
 void PositionPacket::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
+    doParsimPacking(b,this->id);
     doParsimPacking(b,this->x);
     doParsimPacking(b,this->y);
     doParsimPacking(b,this->time);
@@ -205,9 +208,20 @@ void PositionPacket::parsimPack(omnetpp::cCommBuffer *b) const
 void PositionPacket::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
+    doParsimUnpacking(b,this->id);
     doParsimUnpacking(b,this->x);
     doParsimUnpacking(b,this->y);
     doParsimUnpacking(b,this->time);
+}
+
+int PositionPacket::getId() const
+{
+    return this->id;
+}
+
+void PositionPacket::setId(int id)
+{
+    this->id = id;
 }
 
 double PositionPacket::getX() const
@@ -304,7 +318,7 @@ const char *PositionPacketDescriptor::getProperty(const char *propertyname) cons
 int PositionPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount() : 3;
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
 unsigned int PositionPacketDescriptor::getFieldTypeFlags(int field) const
@@ -319,8 +333,9 @@ unsigned int PositionPacketDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *PositionPacketDescriptor::getFieldName(int field) const
@@ -332,20 +347,22 @@ const char *PositionPacketDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
+        "id",
         "x",
         "y",
         "time",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
 int PositionPacketDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+0;
-    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+1;
-    if (fieldName[0]=='t' && strcmp(fieldName, "time")==0) return base+2;
+    if (fieldName[0]=='i' && strcmp(fieldName, "id")==0) return base+0;
+    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
+    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
+    if (fieldName[0]=='t' && strcmp(fieldName, "time")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -358,11 +375,12 @@ const char *PositionPacketDescriptor::getFieldTypeString(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
+        "int",
         "double",
         "double",
         "double",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **PositionPacketDescriptor::getFieldPropertyNames(int field) const
@@ -415,9 +433,10 @@ std::string PositionPacketDescriptor::getFieldValueAsString(void *object, int fi
     }
     PositionPacket *pp = (PositionPacket *)object; (void)pp;
     switch (field) {
-        case 0: return double2string(pp->getX());
-        case 1: return double2string(pp->getY());
-        case 2: return double2string(pp->getTime());
+        case 0: return long2string(pp->getId());
+        case 1: return double2string(pp->getX());
+        case 2: return double2string(pp->getY());
+        case 3: return double2string(pp->getTime());
         default: return "";
     }
 }
@@ -432,9 +451,10 @@ bool PositionPacketDescriptor::setFieldValueAsString(void *object, int field, in
     }
     PositionPacket *pp = (PositionPacket *)object; (void)pp;
     switch (field) {
-        case 0: pp->setX(string2double(value)); return true;
-        case 1: pp->setY(string2double(value)); return true;
-        case 2: pp->setTime(string2double(value)); return true;
+        case 0: pp->setId(string2long(value)); return true;
+        case 1: pp->setX(string2double(value)); return true;
+        case 2: pp->setY(string2double(value)); return true;
+        case 3: pp->setTime(string2double(value)); return true;
         default: return false;
     }
 }

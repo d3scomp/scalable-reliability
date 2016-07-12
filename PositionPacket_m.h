@@ -23,6 +23,7 @@
  * //
  * packet PositionPacket
  * {
+ *     int id;
  *     double x;
  *     double y;
  *     double time;
@@ -32,6 +33,7 @@
 class PositionPacket : public ::omnetpp::cPacket
 {
   protected:
+    int id;
     double x;
     double y;
     double time;
@@ -53,6 +55,8 @@ class PositionPacket : public ::omnetpp::cPacket
     virtual void parsimUnpack(omnetpp::cCommBuffer *b);
 
     // field getter/setter methods
+    virtual int getId() const;
+    virtual void setId(int id);
     virtual double getX() const;
     virtual void setX(double x);
     virtual double getY() const;

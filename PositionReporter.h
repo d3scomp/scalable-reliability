@@ -17,8 +17,16 @@
 #define __SCALABLE_RELIABILITY_POSITIONREPORTER_H_
 
 #include <omnetpp.h>
+#include <map>
 
 using namespace omnetpp;
+
+struct Info{
+    int id;
+    double x;
+    double y;
+    double time;
+};
 
 /**
  Position reporter
@@ -33,8 +41,14 @@ private:
     int periodMs;
     cMessage event;
     int lower802154LayerOut;
+    std::map<int, Info> others;
+
+    inet::Coord getPosition();
 
     void handleTimerEvent(cMessage *msg);
+    void sendPositionUpdate();
+    void collectDelays();
+    void handlePositionUpdate(PositionPacket *packet);
 };
 
 #endif

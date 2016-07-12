@@ -17,6 +17,7 @@
 // Position message
 //
 packet PositionPacket {
+    int id;
     double x;
     double y;
     double time;
