@@ -32,6 +32,7 @@ protected:
 private:
     int periodMs;
     cMessage event;
+    int lower802154LayerOut;
 
     void handleTimerEvent(cMessage *msg);
 };

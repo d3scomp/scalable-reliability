@@ -24,9 +24,11 @@
 Define_Module(PositionReporter);
 
 void PositionReporter::initialize() {
-    std::cout << "Position reporter - initialize" << std::endl;
     // Get parameters
     periodMs = par("periodMs");
+
+    // Get out gate identifier
+    lower802154LayerOut = findGate("lower802154LayerOut");
 
     // Schedule first reporting event
     this->scheduleAt(0, &event);
@@ -58,7 +60,7 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
     packet->setControlInfo(ctrl);
 
     // Send packet
-    send(packet, findGate("lower802154LayerOut"));
+    send(packet, lower802154LayerOut);
 
     // Schedule next position reporting event
     this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), msg);
