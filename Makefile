@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for scalable-reliability
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -L../inet/out/$$\(CONFIGNAME\)/src -lINET -KINET_PROJ=../inet
+#  opp_makemake -f --deep -O out -I../inet/src -L../inet/out/$$\(CONFIGNAME\)/src -lINET -KINET_PROJ=../inet
 #
 
 # Name of target to be created (-o option)
@@ -15,7 +15,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I. -Iresults
+INCLUDE_PATH = -I../inet/src -I. -Iresults
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -30,10 +30,11 @@ PROJECTRELATIVE_PATH =
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/PositionReporter.o
+OBJS = $O/PositionReporter.o $O/PositionPacket_m.o
 
 # Message files
-MSGFILES =
+MSGFILES = \
+    PositionPacket.msg
 
 # SM files
 SMFILES =
@@ -130,6 +131,21 @@ depend:
 	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
+$O/PositionPacket_m.o: PositionPacket_m.cc \
+	PositionPacket_m.h
 $O/PositionReporter.o: PositionReporter.cc \
+	$(INET_PROJ)/src/inet/common/Compat.h \
+	$(INET_PROJ)/src/inet/common/INETDefs.h \
+	$(INET_PROJ)/src/inet/common/INETMath.h \
+	$(INET_PROJ)/src/inet/common/InitStages.h \
+	$(INET_PROJ)/src/inet/common/geometry/common/Coord.h \
+	$(INET_PROJ)/src/inet/common/geometry/common/EulerAngles.h \
+	$(INET_PROJ)/src/inet/features.h \
+	$(INET_PROJ)/src/inet/linklayer/common/MACAddress.h \
+	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo.h \
+	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo_m.h \
+	$(INET_PROJ)/src/inet/linklayer/contract/IMACProtocolControlInfo.h \
+	$(INET_PROJ)/src/inet/mobility/contract/IMobility.h \
+	PositionPacket_m.h \
 	PositionReporter.h
 

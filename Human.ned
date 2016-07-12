@@ -45,5 +45,7 @@ module Human {
 			    periodMs = 20;
 		}
 	
-	connections allowunconnected:        	
+	connections allowunconnected:
+	    nic802154.upperLayerOut --> positionReporter.lower802154LayerIn;
+		nic802154.upperLayerIn <-- positionReporter.lower802154LayerOut;
 }

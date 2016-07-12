@@ -39,6 +39,13 @@ module Robot {
 		}
 		
 		nic802154: Ieee802154NarrowbandNic {}
+		
+		positionReporter: PositionReporter {
+			parameters:
+			    periodMs = 20;
+		}
 	
 	connections allowunconnected:
+	    nic802154.upperLayerOut --> positionReporter.lower802154LayerIn;
+		nic802154.upperLayerIn <-- positionReporter.lower802154LayerOut; 
 }

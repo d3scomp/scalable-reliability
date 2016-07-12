@@ -14,13 +14,10 @@
 // 
 
 //
-// Position reporting module
+// Position message
 //
-simple PositionReporter {
-    parameters:
-        int periodMs;
-        
-   	gates:
-		input lower802154LayerIn;
-		output lower802154LayerOut;
+packet PositionPacket {
+    double x;
+    double y;
+    double time;
 }
