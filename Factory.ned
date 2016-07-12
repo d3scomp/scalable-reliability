@@ -39,6 +39,9 @@ network Factory
         humans[numHumans]: Human {
             @display("p=291,60");
         }
+        
+        dumper: Dumper {
+        }
 
 	connections allowunconnected:
 }

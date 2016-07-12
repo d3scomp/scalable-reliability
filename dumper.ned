@@ -14,14 +14,7 @@
 // 
 
 //
-// Position reporting module
+// TODO auto-generated module
 //
-simple PositionReporter {
-    parameters:
-        int periodMs;
-        bool printReports;
-        
-   	gates:
-		input lower802154LayerIn;
-		output lower802154LayerOut;
+simple Dumper {
 }

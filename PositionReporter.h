@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include <map>
+#include "dumper.h"
 
 using namespace omnetpp;
 
@@ -39,9 +40,12 @@ protected:
 
 private:
     int periodMs;
+    bool printReports;
+
     cMessage event;
     int lower802154LayerOut;
     std::map<int, Info> others;
+    Dumper *dumper;
 
     inet::Coord getPosition();
 

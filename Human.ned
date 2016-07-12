@@ -43,6 +43,7 @@ module Human {
 		positionReporter: PositionReporter {
 			parameters:
 			    periodMs = 20;
+			    printReports = true;
 		}
 	
 	connections allowunconnected:

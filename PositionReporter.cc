@@ -26,9 +26,13 @@ Define_Module(PositionReporter);
 void PositionReporter::initialize() {
     // Get parameters
     periodMs = par("periodMs");
+    printReports = par("printReports");
 
     // Get out gate identifier
     lower802154LayerOut = findGate("lower802154LayerOut");
+
+    // Get data dumper module
+    dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
     this->scheduleAt(0, &event);
@@ -87,19 +91,28 @@ void PositionReporter::collectDelays() {
     inet::Coord position = getPosition();
     double time = simTime().dbl();
 
-    std::cout << ">>> Report from node id: " << getId() << std::endl;
+    if(printReports) {
+        std::cout << ">>> Report from node id: " << getId() << std::endl;
+    }
     for (auto& kv : others) {
         double lattency = time - kv.second.time;
         double distance = sqrt((kv.second.x - position.x) * (kv.second.x - position.x) + (kv.second.y - position.y) * (kv.second.y - position.y));
 
-        std::cout << "id:" << kv.first << " lattency: " << lattency << " distance: " << distance << std::endl;
+        dumper->dump(lattency, distance);
+
+        if(printReports) {
+            std::cout << "id:" << kv.first << " lattency: " << lattency << " distance: " << distance << std::endl;
+        }
     }
-    std::cout << std::endl;
+    if(printReports) {
+        std::cout << std::endl;
+    }
 }
 
 void PositionReporter::deleteModule() {
     // Ensure we are not deleting scheduled event
     cancelEvent(&event);
+
     cSimpleModule::deleteModule();
 }
 

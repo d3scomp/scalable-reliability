@@ -13,15 +13,27 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-//
-// Position reporting module
-//
-simple PositionReporter {
-    parameters:
-        int periodMs;
-        bool printReports;
-        
-   	gates:
-		input lower802154LayerIn;
-		output lower802154LayerOut;
+#include <ctime>
+#include <string>
+
+#include "dumper.h"
+
+Define_Module(Dumper);
+
+void Dumper::initialize() {
+    // Open data file
+    dataFile.open("logs/" + std::to_string(std::time(0)) + ".txt");
+}
+
+void Dumper::handleMessage(cMessage *msg) {
+    // TODO - Generated method body
+}
+
+void Dumper::dump(double lattency, double distance) {
+    dataFile << lattency << "   " << distance << std::endl;
+}
+
+void Dumper::deleteModule() {
+    dataFile.close();
+    cSimpleModule::deleteModule();
 }
