@@ -30,7 +30,7 @@ void Dumper::handleMessage(cMessage *msg) {
 }
 
 void Dumper::dump(double lattency, double distance) {
-    dataFile << lattency << "   " << distance << std::endl;
+    dataFile << lattency << "\t" << distance << std::endl;
 }
 
 void Dumper::deleteModule() {
