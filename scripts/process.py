@@ -13,14 +13,27 @@ def processLogFile(file: str):
 
     lattencies = []
     distancies = []
-    
+    boxLattencies = {}
+    data = []
+
     for line in f:
         vals = line.split("\t")
-        lattencies.append(vals[0])
-        distancies.append(vals[1])
+        latt = float(vals[0])
+        gtdist = float(vals[1])
+        dist = float(vals[2])
+
+        lattencies.append(latt)
+        distancies.append(gtdist)
+
+        dist_m = int(gtdist)
+        if dist_m not in boxLattencies:
+            boxLattencies[dist_m] = []
+
+        boxLattencies[dist_m].append(latt)
+
+
 
     print("Processing " + file)
-    #print(data)
 
     fig = plot.figure()
     ax = fig.add_subplot(111)
@@ -28,13 +41,27 @@ def processLogFile(file: str):
     ax.set_xlabel("Distance in meters")
     ax.set_ylabel("Lattency in seconds")
 
-    ax.plot(distancies, lattencies, 'bo')
+    #ax.plot(distancies, lattencies, 'bo')
+
+    data = []
+    ticks = []
+    for key in range(0, max(boxLattencies.keys())):
+        if key in boxLattencies:
+            data.append(boxLattencies[key])
+        else:
+            data.append([])
+        ticks.append(key)
+
+    ax.boxplot(data, positions=range(0, len(data)), patch_artist=True, manage_xticks = False)
+
+    plot.xlim(-1, max(boxLattencies.keys()))
+
 
     print("Storing png")
     fig.savefig(file + ".png", dpi=256, width=20, wight=15)
 
-    #print("Storing eps")
-    #fig.savefig(file + ".eps")
+    print("Storing eps")
+    fig.savefig(file + ".eps")
     
     #fig.savefig(file + ".pdf")
     #fig.savefig(file + ".ps")
