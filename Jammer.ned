@@ -17,9 +17,9 @@ import inet.mobility.single.GaussMarkovMobility;
 import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
 
 //
-// Human
+// Robot
 //
-module Human {
+module Jammer {
 	parameters:
 		@node;
 		@networkNode();
@@ -28,26 +28,24 @@ module Human {
 		input radio80211In @directIn;
 		input radio802154In @directIn;
 		inout direct[];
-		
-	submodules:
+
+    submodules:
 		mobility: GaussMarkovMobility {
 			parameters:
 			    alpha = 0.5;
-			    variance = 1.5;
-		    	margin = 10m;
-		    	speed = 1mps;
+		    	variance = 2;
+		    	margin = 50m;
+		    	speed = 50mps;
 		}
 		
 		nic802154: Ieee802154NarrowbandNic {}
 		
-		positionReporter: PositionReporter {
+		jammer: JammerApp {
 			parameters:
-			    report = default(true);
-			    periodMs = 30;
-			    printReports = true;
+			    periodMs = default(30);
 		}
 	
 	connections allowunconnected:
-	    nic802154.upperLayerOut --> positionReporter.lower802154LayerIn;
-		nic802154.upperLayerIn <-- positionReporter.lower802154LayerOut;
+		nic802154.upperLayerOut --> jammer.lower802154LayerIn;
+		nic802154.upperLayerIn <-- jammer.lower802154LayerOut;
 }

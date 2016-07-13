@@ -21,6 +21,7 @@ network Factory
     parameters:
         int numRobots;
         int numHumans;
+        int numJammers;
 
         @display("bgb=50,50");
     submodules:
@@ -42,6 +43,8 @@ network Factory
         
         dumper: Dumper {
         }
+        
+        jammers[numJammers]: Jammer;
 
 	connections allowunconnected:
 }

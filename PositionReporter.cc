@@ -38,9 +38,9 @@ void PositionReporter::initialize() {
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
-    double offset = ((double)(std::rand() % periodMs)) / 1000.0;//  nextOffset;
-    //double offset = nextOffset;
-    //nextOffset += 0.002;
+    //double offset = ((double)(std::rand() % periodMs)) / 1000.0;//  nextOffset;
+    double offset = nextOffset;
+    nextOffset += 0.003;
     std::cout << "Offset: " << offset << std::endl;
     this->scheduleAt(offset, &event);
 }
@@ -49,8 +49,11 @@ void PositionReporter::handleMessage(cMessage *msg) {
     if(msg == &event) {
         handleTimerEvent(msg);
     } else {
-        PositionPacket *positionPacket = check_and_cast<PositionPacket*>(msg);
-        handlePositionUpdate(positionPacket);
+        if(dynamic_cast<PositionPacket *>(msg) != nullptr) {
+            PositionPacket *positionPacket = check_and_cast<PositionPacket*>(msg);
+            handlePositionUpdate(positionPacket);
+        }
+
         delete msg;
     }
 }

@@ -31,8 +31,6 @@ def processLogFile(file: str):
 
         boxLattencies[dist_m].append(latt)
 
-
-
     print("Processing " + file)
 
     fig = plot.figure()
