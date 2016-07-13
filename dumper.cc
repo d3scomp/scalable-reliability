@@ -29,8 +29,8 @@ void Dumper::handleMessage(cMessage *msg) {
     // TODO - Generated method body
 }
 
-void Dumper::dump(double lattency, double distance) {
-    dataFile << lattency << "\t" << distance << std::endl;
+void Dumper::dump(double lattency, double distance, double groundTruthDistance) {
+    dataFile << lattency << "\t" << groundTruthDistance << "\t" << distance << std::endl;
 }
 
 void Dumper::deleteModule() {

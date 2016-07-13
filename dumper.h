@@ -26,7 +26,7 @@ using namespace omnetpp;
  */
 class Dumper : public cSimpleModule {
 public:
-    void dump(double lattency, double distance);
+    void dump(double lattency, double distance, double groundTruthDistance);
 
 protected:
     virtual void initialize();

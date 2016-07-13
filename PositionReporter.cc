@@ -35,7 +35,7 @@ void PositionReporter::initialize() {
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
-    this->scheduleAt(0, &event);
+    this->scheduleAt(std::rand() % 20, &event);
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
@@ -62,7 +62,12 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
 }
 
 inet::Coord PositionReporter::getPosition() {
-    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(getParentModule()->getSubmodule("mobility"));
+    int id = getParentModule()->getId();
+    return getPosition(id);
+}
+
+inet::Coord PositionReporter::getPosition(int id) {
+    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(getSimulation()->getModule(id)->getSubmodule("mobility"));
     return mobility->getCurrentPosition();
 }
 
@@ -73,7 +78,7 @@ void PositionReporter::sendPositionUpdate() {
 
     // Construct packet
     PositionPacket *packet = new PositionPacket();
-    packet->setId(getId());
+    packet->setId(getParentModule()->getId());
     packet->setX(position.x);
     packet->setY(position.y);
     packet->setTime(time);
@@ -96,9 +101,19 @@ void PositionReporter::collectDelays() {
     }
     for (auto& kv : others) {
         double lattency = time - kv.second.time;
-        double distance = sqrt((kv.second.x - position.x) * (kv.second.x - position.x) + (kv.second.y - position.y) * (kv.second.y - position.y));
 
-        dumper->dump(lattency, distance);
+        // Distance from data packet
+        double dx = kv.second.x - position.x;
+        double dy = kv.second.y - position.y;
+        double distance = sqrt(dx * dx + dy * dy);
+
+        // Ground truth distance
+        inet::Coord gtPos = getPosition(kv.first);
+        double gtdx = position.x - gtPos.x;
+        double gtdy = position.x - gtPos.y;
+        double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
+
+        dumper->dump(lattency, distance, gtDistance);
 
         if(printReports) {
             std::cout << "id:" << kv.first << " lattency: " << lattency << " distance: " << distance << std::endl;

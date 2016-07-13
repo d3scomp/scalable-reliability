@@ -22,7 +22,7 @@ network Factory
         int numRobots;
         int numHumans;
 
-        @display("bgb=50,50");
+        @display("bgb=30,30");
     submodules:
         environment: PhysicalEnvironment {
             parameters:
@@ -31,7 +31,7 @@ network Factory
 
         radioMedium: Ieee802154NarrowbandScalarRadioMedium {
             parameters:
-                @display("p=50,50");
+                @display("p=15,15");
         }
 
         robots[numRobots]: Robot;

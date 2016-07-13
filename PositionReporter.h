@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include <map>
+#include <cstdlib>
 #include "dumper.h"
 
 using namespace omnetpp;
@@ -48,6 +49,7 @@ private:
     Dumper *dumper;
 
     inet::Coord getPosition();
+    inet::Coord getPosition(int id);
 
     void handleTimerEvent(cMessage *msg);
     void sendPositionUpdate();
