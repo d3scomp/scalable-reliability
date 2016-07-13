@@ -41,10 +41,8 @@ def processLogFile(file: str):
     #fig.savefig(file + ".svg")
         
         
-for (dirpath, dirnames, filenames) in os.walk("../logs"):
-    print(filenames)
-    for file in filenames:
-        if file.endswith(".txt"):
-            processLogFile("../logs/" + file)
+for file in os.listdir("../logs"):
+    if file.endswith(".txt"):
+        processLogFile("../logs/" + file)
 
 

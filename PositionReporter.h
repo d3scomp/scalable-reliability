@@ -42,14 +42,15 @@ protected:
 private:
     int periodMs;
     bool printReports;
+    bool report;
+    static double nextOffset;
 
     cMessage event;
     int lower802154LayerOut;
     std::map<int, Info> others;
     Dumper *dumper;
 
-    inet::Coord getPosition();
-    inet::Coord getPosition(int id);
+    inet::Coord getPosition(int moduleId);
 
     void handleTimerEvent(cMessage *msg);
     void sendPositionUpdate();

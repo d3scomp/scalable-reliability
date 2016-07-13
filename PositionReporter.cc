@@ -23,10 +23,13 @@
 
 Define_Module(PositionReporter);
 
+double PositionReporter::nextOffset = 0;
+
 void PositionReporter::initialize() {
     // Get parameters
     periodMs = par("periodMs");
     printReports = par("printReports");
+    report = par("report");
 
     // Get out gate identifier
     lower802154LayerOut = findGate("lower802154LayerOut");
@@ -35,7 +38,10 @@ void PositionReporter::initialize() {
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
-    this->scheduleAt(std::rand() % 20, &event);
+    double offset = nextOffset;
+    nextOffset += 0.050;
+    std::cout << "Offset: " << offset << std::endl;
+    this->scheduleAt(offset, &event);
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
@@ -49,11 +55,19 @@ void PositionReporter::handleMessage(cMessage *msg) {
 }
 
 void PositionReporter::handlePositionUpdate(PositionPacket *packet) {
-    others[packet->getId()] = {packet->getId(), packet->getX(), packet->getY(), packet->getTime()};
+    std::cout << getParentModule()->getFullName() << ": Received at: " << packet->getArrivalTime() << std::endl;
+
+    Info other = {packet->getId(), packet->getX(), packet->getY(), packet->getTime()};
+    others[packet->getId()] = other;
+    std::cout << getParentModule()->getFullName() << ": Size: " << others.size() << std::endl;
 }
 
 void PositionReporter::handleTimerEvent(cMessage *msg) {
-    sendPositionUpdate();
+    std::cout << getParentModule()->getFullName() << ": Incoming timer at: " << simTime() << std::endl;
+
+    if(report) {
+        sendPositionUpdate();
+    }
 
     collectDelays();
 
@@ -61,19 +75,15 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
     this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), msg);
 }
 
-inet::Coord PositionReporter::getPosition() {
-    int id = getParentModule()->getId();
-    return getPosition(id);
-}
-
-inet::Coord PositionReporter::getPosition(int id) {
-    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(getSimulation()->getModule(id)->getSubmodule("mobility"));
+inet::Coord PositionReporter::getPosition(int moduleId) {
+    cModule *module = getSimulation()->getModule(moduleId);
+    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(module->getSubmodule("mobility"));
     return mobility->getCurrentPosition();
 }
 
 void PositionReporter::sendPositionUpdate() {
     // Get position and time
-    inet::Coord position = getPosition();
+    inet::Coord position = getPosition(getParentModule()->getId());
     double time = simTime().dbl();
 
     // Construct packet
@@ -90,33 +100,39 @@ void PositionReporter::sendPositionUpdate() {
 
     // Send packet
     send(packet, lower802154LayerOut);
+    std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
 }
 
 void PositionReporter::collectDelays() {
-    inet::Coord position = getPosition();
+    inet::Coord position = getPosition(getParentModule()->getId());
     double time = simTime().dbl();
 
     if(printReports) {
         std::cout << ">>> Report from node id: " << getId() << std::endl;
     }
+
+    std::cout << getParentModule()->getFullName() << ": ReadSize: " << others.size() << std::endl;
     for (auto& kv : others) {
-        double lattency = time - kv.second.time;
+        Info other = kv.second;
+
+        double lattency = time - other.time;
 
         // Distance from data packet
-        double dx = kv.second.x - position.x;
-        double dy = kv.second.y - position.y;
+        double dx = other.x - position.x;
+        double dy = other.y - position.y;
         double distance = sqrt(dx * dx + dy * dy);
 
         // Ground truth distance
-        inet::Coord gtPos = getPosition(kv.first);
+        inet::Coord gtPos = getPosition(other.id);
         double gtdx = position.x - gtPos.x;
-        double gtdy = position.x - gtPos.y;
+        double gtdy = position.y - gtPos.y;
         double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
 
         dumper->dump(lattency, distance, gtDistance);
 
         if(printReports) {
-            std::cout << "id:" << kv.first << " lattency: " << lattency << " distance: " << distance << std::endl;
+            std::cout << "id:" << other.id << " lattency: " << lattency << " gtDistance: " << gtDistance << " distance: " << distance;
+            std::cout << "   " << gtPos << "-" << other.x << "," << other.y << std::endl;
         }
     }
     if(printReports) {
