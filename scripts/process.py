@@ -33,8 +33,8 @@ def processLogFile(file: str):
     print("Storing png")
     fig.savefig(file + ".png", dpi=256, width=20, wight=15)
 
-    print("Storing eps")
-    fig.savefig(file + ".eps")
+    #print("Storing eps")
+    #fig.savefig(file + ".eps")
     
     #fig.savefig(file + ".pdf")
     #fig.savefig(file + ".ps")
