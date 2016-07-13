@@ -43,7 +43,7 @@ module Robot {
 		positionReporter: PositionReporter {
 			parameters:
 			    report = default(true);
-			    periodMs = 100;
+			    periodMs = 20;
 			    printReports = true;
 		}
 	

@@ -39,7 +39,7 @@ void PositionReporter::initialize() {
 
     // Schedule first reporting event
     double offset = nextOffset;
-    nextOffset += 0.050;
+    nextOffset += 0.001;
     std::cout << "Offset: " << offset << std::endl;
     this->scheduleAt(offset, &event);
 }

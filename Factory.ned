@@ -22,7 +22,7 @@ network Factory
         int numRobots;
         int numHumans;
 
-        @display("bgb=30,30");
+        @display("bgb=50,50");
     submodules:
         environment: PhysicalEnvironment {
             parameters:

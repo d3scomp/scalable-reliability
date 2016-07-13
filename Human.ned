@@ -42,6 +42,7 @@ module Human {
 		
 		positionReporter: PositionReporter {
 			parameters:
+			    report = default(true);
 			    periodMs = 20;
 			    printReports = true;
 		}
