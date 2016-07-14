@@ -23,7 +23,7 @@
 
 Define_Module(PositionReporter);
 
-double PositionReporter::nextOffset = 0;
+int PositionReporter::nextOffsetMs = 0;
 
 void PositionReporter::initialize() {
     // Get parameters
@@ -38,11 +38,11 @@ void PositionReporter::initialize() {
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
-    //double offset = ((double)(std::rand() % periodMs)) / 1000.0;//  nextOffset;
-    double offset = nextOffset;
-    nextOffset += 0.003;
-    std::cout << "Offset: " << offset << std::endl;
-    this->scheduleAt(offset, &event);
+    int offsetMs = std::rand() % (periodMs / 2);
+    //int offsetMs = nextOffsetMs; nextOffsetMs += 10;
+    //int offsetMs = 0;
+    std::cout << "OffsetMs: " << offsetMs << std::endl;
+    this->scheduleAt(SimTime(offsetMs, SIMTIME_MS), &event);
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
@@ -76,7 +76,12 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
     collectDelays();
 
     // Schedule next position reporting event
-    this->scheduleAt(simTime() + SimTime(periodMs, SIMTIME_MS), msg);
+
+    int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
+    //int delayMs = periodMs;
+
+    std::cout << "DelayMs: " << delayMs << std::endl;
+    this->scheduleAt(simTime() + SimTime(delayMs, SIMTIME_MS), msg);
 }
 
 inet::Coord PositionReporter::getPosition(int moduleId) {
@@ -96,6 +101,7 @@ void PositionReporter::sendPositionUpdate() {
     packet->setX(position.x);
     packet->setY(position.y);
     packet->setTime(time);
+    packet->setByteLength(sizeof(int) + sizeof(double) * 3);
 
     // Attach destination address
     inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();

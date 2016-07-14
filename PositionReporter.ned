@@ -18,9 +18,9 @@
 //
 simple PositionReporter {
     parameters:
-        int periodMs;
-        bool printReports;
-        bool report;
+        int periodMs = default(30);
+        bool printReports = default(true);
+        bool report = default(true);
         
    	gates:
 		input lower802154LayerIn;

@@ -43,7 +43,7 @@ private:
     int periodMs;
     bool printReports;
     bool report;
-    static double nextOffset;
+    static int nextOffsetMs;
 
     cMessage event;
     int lower802154LayerOut;
