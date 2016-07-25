@@ -46,7 +46,7 @@ private:
     static int nextOffsetMs;
 
     cMessage event;
-    int lower802154LayerOut;
+    int lowerLayerOut;
     std::map<int, Info> others;
     Dumper *dumper;
 

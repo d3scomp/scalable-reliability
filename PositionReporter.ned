@@ -23,6 +23,6 @@ simple PositionReporter {
         bool report = default(true);
         
    	gates:
-		input lower802154LayerIn;
-		output lower802154LayerOut;
+		input lowerLayerIn;
+		output lowerLayerOut;
 }

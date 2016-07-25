@@ -16,7 +16,7 @@
 
 #include <inet/mobility/contract/IMobility.h>
 #include <inet/linklayer/common/MACAddress.h>
-#include <inet/linklayer/common/SimpleLinkLayerControlInfo.h>
+#include <inet/linklayer/common/Ieee802Ctrl.h>
 
 #include "PositionPacket_m.h"
 #include "PositionReporter.h"
@@ -32,7 +32,7 @@ void PositionReporter::initialize() {
     report = par("report");
 
     // Get out gate identifier
-    lower802154LayerOut = findGate("lower802154LayerOut");
+    lowerLayerOut = findGate("lowerLayerOut");
 
     // Get data dumper module
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
@@ -104,12 +104,15 @@ void PositionReporter::sendPositionUpdate() {
     packet->setByteLength(sizeof(int) + sizeof(double) * 3);
 
     // Attach destination address
-    inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
+    //inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
+    //ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
+
+    inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
     ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
     packet->setControlInfo(ctrl);
 
     // Send packet
-    send(packet, lower802154LayerOut);
+    send(packet, lowerLayerOut);
     std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
 }
 

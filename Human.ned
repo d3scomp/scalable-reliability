@@ -14,7 +14,7 @@
 // 
 
 import inet.mobility.single.GaussMarkovMobility;
-import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
+import inet.linklayer.ieee80211.Ieee80211Nic;
 
 //
 // Human
@@ -26,7 +26,6 @@ module Human {
         
 	gates:
 		input radio80211In @directIn;
-		input radio802154In @directIn;
 		inout direct[];
 		
 	submodules:
@@ -38,13 +37,13 @@ module Human {
 		    	speed = 1mps;
 		}
 		
-		nic802154: Ieee802154NarrowbandNic {}
+		nic80211: Ieee80211Nic {}
 		
 		positionReporter: PositionReporter {
 			parameters:
 		}
 	
 	connections allowunconnected:
-	    nic802154.upperLayerOut --> positionReporter.lower802154LayerIn;
-		nic802154.upperLayerIn <-- positionReporter.lower802154LayerOut;
+	    nic80211.upperLayerOut --> positionReporter.lowerLayerIn;
+		nic80211.upperLayerIn <-- positionReporter.lowerLayerOut;
 }

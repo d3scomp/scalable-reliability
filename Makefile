@@ -164,9 +164,9 @@ $O/PositionReporter.o: PositionReporter.cc \
 	$(INET_PROJ)/src/inet/common/geometry/common/Coord.h \
 	$(INET_PROJ)/src/inet/common/geometry/common/EulerAngles.h \
 	$(INET_PROJ)/src/inet/features.h \
+	$(INET_PROJ)/src/inet/linklayer/common/Ieee802Ctrl.h \
+	$(INET_PROJ)/src/inet/linklayer/common/Ieee802Ctrl_m.h \
 	$(INET_PROJ)/src/inet/linklayer/common/MACAddress.h \
-	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo.h \
-	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo_m.h \
 	$(INET_PROJ)/src/inet/linklayer/contract/IMACProtocolControlInfo.h \
 	$(INET_PROJ)/src/inet/mobility/contract/IMobility.h \
 	PositionPacket_m.h \
