@@ -20,6 +20,7 @@
 #include <map>
 #include <cstdlib>
 #include "dumper.h"
+#include <random>
 
 using namespace omnetpp;
 
@@ -44,6 +45,7 @@ private:
     bool printReports;
     bool report;
     static int nextOffsetMs;
+    static std::default_random_engine *random;
 
     cMessage event;
     int lower802154LayerOut;
