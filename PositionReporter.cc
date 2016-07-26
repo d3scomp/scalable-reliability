@@ -24,6 +24,7 @@
 Define_Module(PositionReporter);
 
 int PositionReporter::nextOffsetMs = 0;
+std::default_random_engine* PositionReporter::random = new std::default_random_engine();
 
 void PositionReporter::initialize() {
     // Get parameters
@@ -38,11 +39,12 @@ void PositionReporter::initialize() {
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
     // Schedule first reporting event
-    int offsetMs = std::rand() % (periodMs / 2);
-    //int offsetMs = nextOffsetMs; nextOffsetMs += 10;
+    std::uniform_int_distribution<int> initOffsetDist(0, periodMs * 1000);
+    int offsetUs = (initOffsetDist)(*random) % (periodMs);
+    //int offsetMs = nextOffsetMs; nextOffsetMs += 1;
     //int offsetMs = 0;
-    std::cout << "OffsetMs: " << offsetMs << std::endl;
-    this->scheduleAt(SimTime(offsetMs, SIMTIME_MS), &event);
+    std::cout << "OffsetMs: " << offsetUs << std::endl;
+    this->scheduleAt(SimTime(offsetUs, SIMTIME_US), &event);
 }
 
 void PositionReporter::handleMessage(cMessage *msg) {
@@ -77,11 +79,16 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
 
     // Schedule next position reporting event
 
-    int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
+    //int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
+    //int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
+
+    std::uniform_int_distribution<int> runOffsetDist(periodMs * 1000 / 2, periodMs * 1000);
+    int delayUs = (runOffsetDist)(*random);
+
     //int delayMs = periodMs;
 
-    std::cout << "DelayMs: " << delayMs << std::endl;
-    this->scheduleAt(simTime() + SimTime(delayMs, SIMTIME_MS), msg);
+    std::cout << "DelayMs: " << delayUs << std::endl;
+    this->scheduleAt(simTime() + SimTime(delayUs, SIMTIME_US), msg);
 }
 
 inet::Coord PositionReporter::getPosition(int moduleId) {

@@ -19,6 +19,7 @@
 #include <omnetpp.h>
 #include <map>
 #include <cstdlib>
+#include <random>
 #include "dumper.h"
 
 using namespace omnetpp;
@@ -43,7 +44,9 @@ private:
     int periodMs;
     bool printReports;
     bool report;
+
     static int nextOffsetMs;
+    static std::default_random_engine *random;
 
     cMessage event;
     int lowerLayerOut;
