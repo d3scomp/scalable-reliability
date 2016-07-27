@@ -35,7 +35,7 @@ void PositionReporter::initialize() {
     // Get out gate identifier
     lowerLayerOut = findGate("lowerLayerOut");
 
-    // Get data dumper module
+    // Get data dumper modules
     delaysLogger = check_and_cast<DataLogger *>(getModuleByPath("delaysLogger"));
 
     // Initialize period distribution

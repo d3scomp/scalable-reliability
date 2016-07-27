@@ -71,5 +71,5 @@ def processLogFile(file: str):
 
 
 for file in os.listdir("../logs"):
-	if file.endswith(".txt"):
+	if file.endswith(".txt") and file.startswith("delays"):
 		processLogFile("../logs/" + file)

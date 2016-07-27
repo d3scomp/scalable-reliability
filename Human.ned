@@ -37,11 +37,9 @@ module Human {
 		    	speed = 1mps;
 		}
 		
-		nic80211: Ieee80211Nic {}
+		nic80211: Ieee80211Nic;
 		
-		positionReporter: PositionReporter {
-			parameters:
-		}
+		positionReporter: PositionReporter;
 	
 	connections allowunconnected:
 	    nic80211.upperLayerOut --> positionReporter.lowerLayerIn;

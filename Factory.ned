@@ -44,7 +44,7 @@ network Factory
         delaysLogger: DataLogger {
             name = "delays";
         }
-        
+                
         jammers[numJammers]: Jammer;
 
 	connections allowunconnected:
