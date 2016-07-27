@@ -101,11 +101,7 @@ void PositionReporter::sendPositionUpdate() {
     packet->setX(position.x);
     packet->setY(position.y);
     packet->setTime(time);
-    packet->setByteLength(sizeof(int) + sizeof(double) * 3);
-
-    // Attach destination address
-    //inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
-    //ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
+    packet->setByteLength(sizeof(int) + 3 * sizeof(double));
 
     inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
     ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
