@@ -43,7 +43,7 @@ def processLogFile(file: str):
 
     data = []
     ticks = []
-    maxdist = min(20, max(boxLattencies.keys()))
+    maxdist = max(boxLattencies.keys())
 
     for key in range(0, maxdist):
         if key in boxLattencies:
