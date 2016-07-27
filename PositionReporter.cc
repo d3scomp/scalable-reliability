@@ -43,7 +43,7 @@ void PositionReporter::initialize() {
 
     // Schedule first reporting event
     std::uniform_int_distribution<int> initOffsetDist(0, periodMs * 1000);
-    int offsetUs = (initOffsetDist)(*random) % (periodMs);
+    int offsetUs = (initOffsetDist)(*random);
     std::cout << "Offset: " << offsetUs << " us" << std::endl;
     this->scheduleAt(SimTime(offsetUs, SIMTIME_US), &event);
 }
