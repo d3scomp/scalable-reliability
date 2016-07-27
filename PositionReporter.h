@@ -29,6 +29,7 @@ struct Info{
     double x;
     double y;
     double time;
+    double maxSpeed;
 };
 
 /**

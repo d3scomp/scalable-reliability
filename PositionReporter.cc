@@ -64,7 +64,7 @@ void PositionReporter::handleMessage(cMessage *msg) {
 void PositionReporter::handlePositionUpdate(PositionPacket *packet) {
     //std::cout << getParentModule()->getFullName() << ": Received at: " << packet->getArrivalTime() << std::endl;
 
-    Info other = {packet->getId(), packet->getX(), packet->getY(), packet->getTime()};
+    Info other = {packet->getId(), packet->getX(), packet->getY(), packet->getTime(), packet->getMaxSpeed()};
     others[packet->getId()] = other;
     //std::cout << getParentModule()->getFullName() << ": Size: " << others.size() << std::endl;
 }
@@ -80,7 +80,9 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
 
     int delayUs = (*runOffsetDist)(*random);
 
-    std::cout << "Delay: " << delayUs << " us" << std::endl;
+    if(printReports) {
+        std::cout << "Delay: " << delayUs << " us" << std::endl;
+    }
     this->scheduleAt(simTime() + SimTime(delayUs, SIMTIME_US), msg);
 }
 
@@ -93,7 +95,7 @@ inet::Coord PositionReporter::getPosition(int moduleId) {
 double PositionReporter::getMaxSpeed(int moduleId) {
     cModule *module = getSimulation()->getModule(moduleId);
     inet::IMobility *mobility = check_and_cast<inet::IMobility *>(module->getSubmodule("mobility"));
-    return mobility->getMaxSpeed();
+    return module->getSubmodule("mobility")->par("speed");
 }
 
 void PositionReporter::sendPositionUpdate() {
@@ -116,7 +118,9 @@ void PositionReporter::sendPositionUpdate() {
 
     // Send packet
     send(packet, lowerLayerOut);
-    std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
+    if(printReports) {
+        std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
+    }
 }
 
 void PositionReporter::collectDelays() {
@@ -127,7 +131,7 @@ void PositionReporter::collectDelays() {
         std::cout << ">>> Report from node id: " << getId() << std::endl;
     }
 
-    //std::cout << getParentModule()->getFullName() << ": ReadSize: " << others.size() << std::endl;
+    delaysLogger->getStream() << getParentModule()->getFullName() << std::endl;
     for (auto& kv : others) {
         Info other = kv.second;
 
@@ -144,12 +148,14 @@ void PositionReporter::collectDelays() {
         double gtdy = position.y - gtPos.y;
         double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
 
-        delaysLogger->getStream() << lattency << "\t" << distance << "\t" << gtDistance << std::endl;
+        delaysLogger->getStream() << lattency << "\t" << distance << "\t" << gtDistance << "\t" << other.maxSpeed << std::endl;
 
         if(printReports) {
             std::cout << "id:" << other.id << " lattency: " << lattency << " gtDistance: " << gtDistance << " distance: " << distance << std::endl;
         }
     }
+    delaysLogger->getStream() << std::endl;
+
     if(printReports) {
         std::cout << std::endl;
     }

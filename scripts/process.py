@@ -18,20 +18,33 @@ def processLogFile(file: str):
 	boxLattencies = {}
 	data = []
 
-	for line in f:
-		vals = line.split("\t")
-		latt = float(vals[0])
-		gtdist = float(vals[1])
-		dist = float(vals[2])
+	while True:
 
-		lattencies.append(latt)
-		distancies.append(gtdist)
+		# Read reported name
+		name = f.readline()
 
-		dist_m = int(gtdist)
-		if dist_m not in boxLattencies:
-			boxLattencies[dist_m] = []
+		if name == '':
+			break
 
-		boxLattencies[dist_m].append(latt)
+		while True:
+			line = f.readline()
+			if len(line.rstrip()) == 0:
+				break
+
+			# Process line
+			vals = line.split("\t")
+			latt = float(vals[0])
+			gtdist = float(vals[1])
+			dist = float(vals[2])
+
+			lattencies.append(latt)
+			distancies.append(gtdist)
+
+			dist_m = int(gtdist)
+			if dist_m not in boxLattencies:
+				boxLattencies[dist_m] = []
+
+			boxLattencies[dist_m].append(latt)
 
 	print("Processing " + file)
 
