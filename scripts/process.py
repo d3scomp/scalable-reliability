@@ -43,7 +43,9 @@ def processLogFile(file: str):
 
     data = []
     ticks = []
-    for key in range(0, max(boxLattencies.keys())):
+    maxdist = min(20, max(boxLattencies.keys()))
+
+    for key in range(0, maxdist):
         if key in boxLattencies:
             data.append(boxLattencies[key])
         else:
@@ -52,7 +54,7 @@ def processLogFile(file: str):
 
     ax.boxplot(data, positions=range(0, len(data)), patch_artist=True, manage_xticks = False)
 
-    plot.xlim(-1, max(boxLattencies.keys()))
+    plot.xlim(-1, maxdist)
 
 
     print("Storing png")
