@@ -21,20 +21,14 @@
 Define_Module(DataLogger);
 
 void DataLogger::initialize() {
+    std::string name = par("name");
+
     // Open data file
-    dataFile.open("logs/" + std::to_string(std::time(0)) + ".txt");
+    dataFile.open("logs/" + name + "." + std::to_string(std::time(0)) + ".txt");
 }
 
 std::ostream& DataLogger::getStream() {
     return dataFile;
-}
-
-void DataLogger::handleMessage(cMessage *msg) {
-    // TODO - Generated method body
-}
-
-void DataLogger::dump(double lattency, double distance, double groundTruthDistance, double allowedSpeed, double relativeAllowedSpeed) {
-    dataFile << lattency << "\t" << groundTruthDistance << "\t" << distance << "\t" << allowedSpeed << "\t" << relativeAllowedSpeed << std::endl;
 }
 
 void DataLogger::deleteModule() {

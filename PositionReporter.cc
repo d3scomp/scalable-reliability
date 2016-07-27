@@ -36,7 +36,7 @@ void PositionReporter::initialize() {
     lowerLayerOut = findGate("lowerLayerOut");
 
     // Get data dumper module
-    dumper = check_and_cast<DataLogger *>(getModuleByPath("dumper"));
+    delaysLogger = check_and_cast<DataLogger *>(getModuleByPath("delaysLogger"));
 
     // Initialize period distribution
     runOffsetDist = new std::uniform_int_distribution<int>(periodMs * 1000 / 2, periodMs * 1000);
@@ -144,7 +144,7 @@ void PositionReporter::collectDelays() {
         double gtdy = position.y - gtPos.y;
         double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
 
-        dumper->getStream() << lattency << "\t" << distance << "\t" << gtDistance << std::endl;
+        delaysLogger->getStream() << lattency << "\t" << distance << "\t" << gtDistance << std::endl;
 
         if(printReports) {
             std::cout << "id:" << other.id << " lattency: " << lattency << " gtDistance: " << gtDistance << " distance: " << distance << std::endl;

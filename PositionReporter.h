@@ -52,7 +52,7 @@ private:
     cMessage event;
     int lowerLayerOut;
     std::map<int, Info> others;
-    DataLogger *dumper;
+    DataLogger *delaysLogger;
 
     inet::Coord getPosition(int moduleId);
     double getMaxSpeed(int moduleId);

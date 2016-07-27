@@ -27,12 +27,10 @@ using namespace omnetpp;
  */
 class DataLogger : public cSimpleModule {
 public:
-    void dump(double lattency, double distance, double groundTruthDistance, double allowedSpeed, double relativeAllowedSpeed);
     std::ostream &getStream();
 
 protected:
     virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
     virtual void deleteModule();
 
 private:

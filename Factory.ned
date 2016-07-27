@@ -41,7 +41,7 @@ network Factory
             @display("p=291,60");
         }
         
-        dumper: DataLogger {
+        delaysLogger: DataLogger {
             name = "delays";
         }
         
