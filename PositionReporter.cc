@@ -38,12 +38,13 @@ void PositionReporter::initialize() {
     // Get data dumper module
     dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
 
+    // Initialize period distribution
+    runOffsetDist = new std::uniform_int_distribution<int>(periodMs * 1000 / 2, periodMs * 1000);
+
     // Schedule first reporting event
     std::uniform_int_distribution<int> initOffsetDist(0, periodMs * 1000);
     int offsetUs = (initOffsetDist)(*random) % (periodMs);
-    //int offsetMs = nextOffsetMs; nextOffsetMs += 1;
-    //int offsetMs = 0;
-    std::cout << "OffsetMs: " << offsetUs << std::endl;
+    std::cout << "Offset: " << offsetUs << " us" << std::endl;
     this->scheduleAt(SimTime(offsetUs, SIMTIME_US), &event);
 }
 
@@ -77,17 +78,9 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
 
     collectDelays();
 
-    // Schedule next position reporting event
+    int delayUs = (*runOffsetDist)(*random);
 
-    //int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
-    //int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
-
-    std::uniform_int_distribution<int> runOffsetDist(periodMs * 1000 / 2, periodMs * 1000);
-    int delayUs = (runOffsetDist)(*random);
-
-    //int delayMs = periodMs;
-
-    std::cout << "DelayMs: " << delayUs << std::endl;
+    std::cout << "Delay: " << delayUs << " us" << std::endl;
     this->scheduleAt(simTime() + SimTime(delayUs, SIMTIME_US), msg);
 }
 

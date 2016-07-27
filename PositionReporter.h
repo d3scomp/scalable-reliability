@@ -47,6 +47,7 @@ private:
 
     static int nextOffsetMs;
     static std::default_random_engine *random;
+    std::uniform_int_distribution<int> *runOffsetDist;
 
     cMessage event;
     int lowerLayerOut;
