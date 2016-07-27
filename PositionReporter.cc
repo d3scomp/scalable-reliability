@@ -36,7 +36,7 @@ void PositionReporter::initialize() {
     lowerLayerOut = findGate("lowerLayerOut");
 
     // Get data dumper module
-    dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
+    dumper = check_and_cast<DataLogger *>(getModuleByPath("dumper"));
 
     // Initialize period distribution
     runOffsetDist = new std::uniform_int_distribution<int>(periodMs * 1000 / 2, periodMs * 1000);
@@ -90,6 +90,12 @@ inet::Coord PositionReporter::getPosition(int moduleId) {
     return mobility->getCurrentPosition();
 }
 
+double PositionReporter::getMaxSpeed(int moduleId) {
+    cModule *module = getSimulation()->getModule(moduleId);
+    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(module->getSubmodule("mobility"));
+    return mobility->getMaxSpeed();
+}
+
 void PositionReporter::sendPositionUpdate() {
     // Get position and time
     inet::Coord position = getPosition(getParentModule()->getId());
@@ -101,7 +107,8 @@ void PositionReporter::sendPositionUpdate() {
     packet->setX(position.x);
     packet->setY(position.y);
     packet->setTime(time);
-    packet->setByteLength(sizeof(int) + 3 * sizeof(double));
+    packet->setMaxSpeed(getMaxSpeed(getParentModule()->getId()));
+    packet->setByteLength(sizeof(int) + 4 * sizeof(double));
 
     inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
     ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
@@ -137,7 +144,7 @@ void PositionReporter::collectDelays() {
         double gtdy = position.y - gtPos.y;
         double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
 
-        dumper->dump(lattency, distance, gtDistance);
+        dumper->getStream() << lattency << "\t" << distance << "\t" << gtDistance << std::endl;
 
         if(printReports) {
             std::cout << "id:" << other.id << " lattency: " << lattency << " gtDistance: " << gtDistance << " distance: " << distance << std::endl;

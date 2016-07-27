@@ -27,6 +27,7 @@
  *     double x;
  *     double y;
  *     double time;
+ *     double maxSpeed;
  * }
  * </pre>
  */
@@ -37,6 +38,7 @@ class PositionPacket : public ::omnetpp::cPacket
     double x;
     double y;
     double time;
+    double maxSpeed;
 
   private:
     void copy(const PositionPacket& other);
@@ -63,6 +65,8 @@ class PositionPacket : public ::omnetpp::cPacket
     virtual void setY(double y);
     virtual double getTime() const;
     virtual void setTime(double time);
+    virtual double getMaxSpeed() const;
+    virtual void setMaxSpeed(double maxSpeed);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const PositionPacket& obj) {obj.parsimPack(b);}

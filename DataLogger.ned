@@ -14,7 +14,9 @@
 // 
 
 //
-// TODO auto-generated module
+// Data logging module
 //
-simple Dumper {
+simple DataLogger {
+    parameters:
+    	string name;
 }

@@ -21,4 +21,5 @@ packet PositionPacket {
     double x;
     double y;
     double time;
+    double maxSpeed;
 }

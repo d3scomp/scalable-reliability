@@ -20,7 +20,7 @@
 #include <map>
 #include <cstdlib>
 #include <random>
-#include "dumper.h"
+#include "DataLogger.h"
 
 using namespace omnetpp;
 
@@ -52,9 +52,10 @@ private:
     cMessage event;
     int lowerLayerOut;
     std::map<int, Info> others;
-    Dumper *dumper;
+    DataLogger *dumper;
 
     inet::Coord getPosition(int moduleId);
+    double getMaxSpeed(int moduleId);
 
     void handleTimerEvent(cMessage *msg);
     void sendPositionUpdate();

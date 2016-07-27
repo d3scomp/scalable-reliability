@@ -18,15 +18,17 @@
 
 #include <omnetpp.h>
 #include <fstream>
+#include <ostream>
 
 using namespace omnetpp;
 
 /**
  * TODO - Generated class
  */
-class Dumper : public cSimpleModule {
+class DataLogger : public cSimpleModule {
 public:
-    void dump(double lattency, double distance, double groundTruthDistance);
+    void dump(double lattency, double distance, double groundTruthDistance, double allowedSpeed, double relativeAllowedSpeed);
+    std::ostream &getStream();
 
 protected:
     virtual void initialize();

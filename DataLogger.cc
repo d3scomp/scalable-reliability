@@ -16,24 +16,28 @@
 #include <ctime>
 #include <string>
 
-#include "dumper.h"
+#include "DataLogger.h"
 
-Define_Module(Dumper);
+Define_Module(DataLogger);
 
-void Dumper::initialize() {
+void DataLogger::initialize() {
     // Open data file
     dataFile.open("logs/" + std::to_string(std::time(0)) + ".txt");
 }
 
-void Dumper::handleMessage(cMessage *msg) {
+std::ostream& DataLogger::getStream() {
+    return dataFile;
+}
+
+void DataLogger::handleMessage(cMessage *msg) {
     // TODO - Generated method body
 }
 
-void Dumper::dump(double lattency, double distance, double groundTruthDistance) {
-    dataFile << lattency << "\t" << groundTruthDistance << "\t" << distance << std::endl;
+void DataLogger::dump(double lattency, double distance, double groundTruthDistance, double allowedSpeed, double relativeAllowedSpeed) {
+    dataFile << lattency << "\t" << groundTruthDistance << "\t" << distance << "\t" << allowedSpeed << "\t" << relativeAllowedSpeed << std::endl;
 }
 
-void Dumper::deleteModule() {
+void DataLogger::deleteModule() {
     dataFile.close();
     cSimpleModule::deleteModule();
 }

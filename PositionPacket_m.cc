@@ -169,6 +169,7 @@ PositionPacket::PositionPacket(const char *name, int kind) : ::omnetpp::cPacket(
     this->x = 0;
     this->y = 0;
     this->time = 0;
+    this->maxSpeed = 0;
 }
 
 PositionPacket::PositionPacket(const PositionPacket& other) : ::omnetpp::cPacket(other)
@@ -194,6 +195,7 @@ void PositionPacket::copy(const PositionPacket& other)
     this->x = other.x;
     this->y = other.y;
     this->time = other.time;
+    this->maxSpeed = other.maxSpeed;
 }
 
 void PositionPacket::parsimPack(omnetpp::cCommBuffer *b) const
@@ -203,6 +205,7 @@ void PositionPacket::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->x);
     doParsimPacking(b,this->y);
     doParsimPacking(b,this->time);
+    doParsimPacking(b,this->maxSpeed);
 }
 
 void PositionPacket::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -212,6 +215,7 @@ void PositionPacket::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->x);
     doParsimUnpacking(b,this->y);
     doParsimUnpacking(b,this->time);
+    doParsimUnpacking(b,this->maxSpeed);
 }
 
 int PositionPacket::getId() const
@@ -252,6 +256,16 @@ double PositionPacket::getTime() const
 void PositionPacket::setTime(double time)
 {
     this->time = time;
+}
+
+double PositionPacket::getMaxSpeed() const
+{
+    return this->maxSpeed;
+}
+
+void PositionPacket::setMaxSpeed(double maxSpeed)
+{
+    this->maxSpeed = maxSpeed;
 }
 
 class PositionPacketDescriptor : public omnetpp::cClassDescriptor
@@ -318,7 +332,7 @@ const char *PositionPacketDescriptor::getProperty(const char *propertyname) cons
 int PositionPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount() : 4;
+    return basedesc ? 5+basedesc->getFieldCount() : 5;
 }
 
 unsigned int PositionPacketDescriptor::getFieldTypeFlags(int field) const
@@ -334,8 +348,9 @@ unsigned int PositionPacketDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
 const char *PositionPacketDescriptor::getFieldName(int field) const
@@ -351,8 +366,9 @@ const char *PositionPacketDescriptor::getFieldName(int field) const
         "x",
         "y",
         "time",
+        "maxSpeed",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<5) ? fieldNames[field] : nullptr;
 }
 
 int PositionPacketDescriptor::findField(const char *fieldName) const
@@ -363,6 +379,7 @@ int PositionPacketDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
     if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
     if (fieldName[0]=='t' && strcmp(fieldName, "time")==0) return base+3;
+    if (fieldName[0]=='m' && strcmp(fieldName, "maxSpeed")==0) return base+4;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -379,8 +396,9 @@ const char *PositionPacketDescriptor::getFieldTypeString(int field) const
         "double",
         "double",
         "double",
+        "double",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<5) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **PositionPacketDescriptor::getFieldPropertyNames(int field) const
@@ -437,6 +455,7 @@ std::string PositionPacketDescriptor::getFieldValueAsString(void *object, int fi
         case 1: return double2string(pp->getX());
         case 2: return double2string(pp->getY());
         case 3: return double2string(pp->getTime());
+        case 4: return double2string(pp->getMaxSpeed());
         default: return "";
     }
 }
@@ -455,6 +474,7 @@ bool PositionPacketDescriptor::setFieldValueAsString(void *object, int field, in
         case 1: pp->setX(string2double(value)); return true;
         case 2: pp->setY(string2double(value)); return true;
         case 3: pp->setTime(string2double(value)); return true;
+        case 4: pp->setMaxSpeed(string2double(value)); return true;
         default: return false;
     }
 }
