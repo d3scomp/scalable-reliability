@@ -2,37 +2,34 @@ import os
 import sys
 import math
 import matplotlib
-
 matplotlib.use('Agg')
 matplotlib.rcParams['agg.path.chunksize'] = 10000
 import matplotlib.pyplot as plot
-from matplotlib import pyplot, colors
-import numpy as np
 
 
-def getspeed(name, colliders):
+def get_speed(name, colliders):
 	if name.startswith("humans"):
-		mymaxspeed = 1
+		my_max_speed = 1
 	else:
-		mymaxspeed = 5
+		my_max_speed = 5
 
 	period = 0.030
-	decelleration = 5
+	deceleration = 5
 
-	resspeed = mymaxspeed
+	resulting_speed = my_max_speed
 
 	for collider in colliders:
 		dist = collider['dist']
-		remdist = dist - collider['latt'] * collider['speed']
-		remdist = max(0, remdist)
-		collidespeed = math.sqrt(2 * remdist * decelleration)
-		myspeed = max(0, collidespeed - collider['speed'])
-		resspeed = min(resspeed, myspeed)
+		rem_dist = dist - collider['latt'] * collider['speed']
+		rem_dist = max(0, rem_dist)
+		collide_speed = math.sqrt(2 * rem_dist * deceleration)
+		my_speed = max(0, collide_speed - collider['speed'])
+		resulting_speed = min(resulting_speed, my_speed)
 
-	return resspeed
+	return resulting_speed
 
 
-def printDelays(file, boxLattencies):
+def print_delays(file, box_lattencies):
 	# Delays
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
@@ -44,11 +41,11 @@ def printDelays(file, boxLattencies):
 
 	data = []
 	ticks = []
-	maxdist = max(boxLattencies.keys())
+	maxdist = max(box_lattencies.keys())
 
 	for key in range(0, maxdist):
-		if key in boxLattencies:
-			data.append(boxLattencies[key])
+		if key in box_lattencies:
+			data.append(box_lattencies[key])
 		else:
 			data.append([])
 		ticks.append(key)
@@ -63,20 +60,21 @@ def printDelays(file, boxLattencies):
 	print("Storing eps")
 	fig.savefig(file + ".eps")
 
-def printSpeeds(file, speeds):
+
+def print_speeds(file, speeds):
 	# Speeds hist
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
 	ax.set_xlabel("Robot speed in meters per second")
 	ax.set_ylabel("Samples")
-	ax.hist(speeds, 50)
+	ax.hist(speeds, 100)
 	print("Storing png")
 	fig.savefig(file + ".speedhist.png", dpi=256, width=20, wight=15)
 	print("Storing eps")
 	fig.savefig(file + ".speedhist.eps")
 
 
-def processLogFile(file: str):
+def process_log_file(file: str):
 	print("Loading " + file)
 	f = open(file, 'r')
 
@@ -119,20 +117,18 @@ def processLogFile(file: str):
 			boxLattencies[dist_m].append(latt)
 
 		if name.startswith("robot"):
-			speeds.append(getspeed(name, colliders))
+			speeds.append(get_speed(name, colliders))
 
 	print("Processing " + file)
 
-	printDelays(file, boxLattencies)
+	print_delays(file, boxLattencies)
 
-	printSpeeds(file, speeds)
-
-
-# fig.savefig(file + ".pdf")
-# fig.savefig(file + ".ps")
-# fig.savefig(file + ".svg")
+	print_speeds(file, speeds)
 
 
-for file in os.listdir("../logs"):
-	if file.endswith(".txt") and file.startswith("delays"):
-		processLogFile("../logs/" + file)
+def process():
+	for file in os.listdir("../logs"):
+		if file.endswith(".txt") and file.startswith("delays"):
+			process_log_file("../logs/" + file)
+
+process()
