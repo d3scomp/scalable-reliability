@@ -94,7 +94,6 @@ inet::Coord PositionReporter::getPosition(int moduleId) {
 
 double PositionReporter::getMaxSpeed(int moduleId) {
     cModule *module = getSimulation()->getModule(moduleId);
-    inet::IMobility *mobility = check_and_cast<inet::IMobility *>(module->getSubmodule("mobility"));
     return module->getSubmodule("mobility")->par("speed");
 }
 

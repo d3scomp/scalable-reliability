@@ -4,3 +4,4 @@ scalable-reliability.exe
 .cmdenv-log
 /logs
 /.tkenvlog
+/scripts/.idea
