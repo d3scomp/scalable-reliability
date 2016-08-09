@@ -19,8 +19,8 @@
 #include <omnetpp.h>
 #include <map>
 #include <cstdlib>
-#include "dumper.h"
 #include <random>
+#include "DataLogger.h"
 
 using namespace omnetpp;
 
@@ -29,6 +29,7 @@ struct Info{
     double x;
     double y;
     double time;
+    double maxSpeed;
 };
 
 /**
@@ -44,15 +45,18 @@ private:
     int periodMs;
     bool printReports;
     bool report;
+
     static int nextOffsetMs;
     static std::default_random_engine *random;
+    std::uniform_int_distribution<int> *runOffsetDist;
 
     cMessage event;
-    int lower802154LayerOut;
+    int lowerLayerOut;
     std::map<int, Info> others;
-    Dumper *dumper;
+    DataLogger *delaysLogger;
 
     inet::Coord getPosition(int moduleId);
+    double getMaxSpeed(int moduleId);
 
     void handleTimerEvent(cMessage *msg);
     void sendPositionUpdate();

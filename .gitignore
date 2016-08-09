@@ -3,3 +3,6 @@ results
 scalable-reliability.exe
 .cmdenv-log
 /logs
+/.tkenvlog
+/scripts/.idea
+*Packet_m*

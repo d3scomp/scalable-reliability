@@ -13,8 +13,28 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-//
-// TODO auto-generated module
-//
-simple Dumper {
-}
+#ifndef __SCALABLE_RELIABILITY_DUMPER_H_
+#define __SCALABLE_RELIABILITY_DUMPER_H_
+
+#include <omnetpp.h>
+#include <fstream>
+#include <ostream>
+
+using namespace omnetpp;
+
+/**
+ * TODO - Generated class
+ */
+class DataLogger : public cSimpleModule {
+public:
+    std::ostream &getStream();
+
+protected:
+    virtual void initialize();
+    virtual void deleteModule();
+
+private:
+    std::ofstream dataFile;
+};
+
+#endif

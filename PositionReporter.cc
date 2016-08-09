@@ -16,7 +16,7 @@
 
 #include <inet/mobility/contract/IMobility.h>
 #include <inet/linklayer/common/MACAddress.h>
-#include <inet/linklayer/common/SimpleLinkLayerControlInfo.h>
+#include <inet/linklayer/common/Ieee802Ctrl.h>
 
 #include "PositionPacket_m.h"
 #include "PositionReporter.h"
@@ -33,18 +33,18 @@ void PositionReporter::initialize() {
     report = par("report");
 
     // Get out gate identifier
-    lower802154LayerOut = findGate("lower802154LayerOut");
+    lowerLayerOut = findGate("lowerLayerOut");
 
-    // Get data dumper module
-    dumper = check_and_cast<Dumper *>(getModuleByPath("dumper"));
+    // Get data dumper modules
+    delaysLogger = check_and_cast<DataLogger *>(getModuleByPath("delaysLogger"));
+
+    // Initialize period distribution
+    runOffsetDist = new std::uniform_int_distribution<int>(periodMs * 1000 / 2, periodMs * 1000);
 
     // Schedule first reporting event
-    //int offsetMs = std::rand() % (periodMs / 2);
     std::uniform_int_distribution<int> initOffsetDist(0, periodMs * 1000);
-    int offsetUs = (initOffsetDist)(*random) % (periodMs);
-    //int offsetMs = nextOffsetMs; nextOffsetMs += 10;
-    //int offsetMs = 0;
-    std::cout << "OffsetUs: " << offsetUs << std::endl;
+    int offsetUs = (initOffsetDist)(*random);
+    std::cout << "Offset: " << offsetUs << " us" << std::endl;
     this->scheduleAt(SimTime(offsetUs, SIMTIME_US), &event);
 }
 
@@ -64,7 +64,7 @@ void PositionReporter::handleMessage(cMessage *msg) {
 void PositionReporter::handlePositionUpdate(PositionPacket *packet) {
     //std::cout << getParentModule()->getFullName() << ": Received at: " << packet->getArrivalTime() << std::endl;
 
-    Info other = {packet->getId(), packet->getX(), packet->getY(), packet->getTime()};
+    Info other = {packet->getId(), packet->getX(), packet->getY(), packet->getTime(), packet->getMaxSpeed()};
     others[packet->getId()] = other;
     //std::cout << getParentModule()->getFullName() << ": Size: " << others.size() << std::endl;
 }
@@ -78,16 +78,11 @@ void PositionReporter::handleTimerEvent(cMessage *msg) {
 
     collectDelays();
 
-    // Schedule next position reporting event
+    int delayUs = (*runOffsetDist)(*random);
 
-   // int delayMs = (periodMs / 2) + (std::rand() % (periodMs / 2));
-
-    std::uniform_int_distribution<int> runOffsetDist(periodMs * 1000 / 2, periodMs * 1000);
-    int delayUs = (runOffsetDist)(*random);
-
-    //int delayMs = periodMs;
-
-    std::cout << "DelayUs: " << delayUs << std::endl;
+    if(printReports) {
+        std::cout << "Delay: " << delayUs << " us" << std::endl;
+    }
     this->scheduleAt(simTime() + SimTime(delayUs, SIMTIME_US), msg);
 }
 
@@ -95,6 +90,11 @@ inet::Coord PositionReporter::getPosition(int moduleId) {
     cModule *module = getSimulation()->getModule(moduleId);
     inet::IMobility *mobility = check_and_cast<inet::IMobility *>(module->getSubmodule("mobility"));
     return mobility->getCurrentPosition();
+}
+
+double PositionReporter::getMaxSpeed(int moduleId) {
+    cModule *module = getSimulation()->getModule(moduleId);
+    return module->getSubmodule("mobility")->par("speed");
 }
 
 void PositionReporter::sendPositionUpdate() {
@@ -108,16 +108,18 @@ void PositionReporter::sendPositionUpdate() {
     packet->setX(position.x);
     packet->setY(position.y);
     packet->setTime(time);
-    packet->setByteLength(sizeof(int) + sizeof(double) * 3);
+    packet->setMaxSpeed(getMaxSpeed(getParentModule()->getId()));
+    packet->setByteLength(sizeof(int) + 4 * sizeof(double));
 
-    // Attach destination address
-    inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
+    inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
     ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
     packet->setControlInfo(ctrl);
 
     // Send packet
-    send(packet, lower802154LayerOut);
-    std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
+    send(packet, lowerLayerOut);
+    if(printReports) {
+        std::cout << getParentModule()->getFullName() << ": Send at: " << simTime() << std::endl;
+    }
 }
 
 void PositionReporter::collectDelays() {
@@ -128,7 +130,7 @@ void PositionReporter::collectDelays() {
         std::cout << ">>> Report from node id: " << getId() << std::endl;
     }
 
-    //std::cout << getParentModule()->getFullName() << ": ReadSize: " << others.size() << std::endl;
+    delaysLogger->getStream() << getParentModule()->getFullName() << std::endl;
     for (auto& kv : others) {
         Info other = kv.second;
 
@@ -145,12 +147,14 @@ void PositionReporter::collectDelays() {
         double gtdy = position.y - gtPos.y;
         double gtDistance = sqrt(gtdx * gtdx + gtdy * gtdy);
 
-        dumper->dump(lattency, distance, gtDistance);
+        delaysLogger->getStream() << lattency << "\t" << distance << "\t" << gtDistance << "\t" << other.maxSpeed << std::endl;
 
         if(printReports) {
             std::cout << "id:" << other.id << " lattency: " << lattency << " gtDistance: " << gtDistance << " distance: " << distance << std::endl;
         }
     }
+    delaysLogger->getStream() << std::endl;
+
     if(printReports) {
         std::cout << std::endl;
     }

@@ -36,7 +36,7 @@ PROJECTRELATIVE_PATH =
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/dumper.o $O/JammerApp.o $O/PositionReporter.o $O/JammerPacket_m.o $O/PositionPacket_m.o
+OBJS = $O/DataLogger.o $O/JammerApp.o $O/PositionReporter.o $O/JammerPacket_m.o $O/PositionPacket_m.o
 
 # Message files
 MSGFILES = \
@@ -141,6 +141,8 @@ depend:
 	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc logs/*.cc logs/old/*.cc results/*.cc scripts/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
+$O/DataLogger.o: DataLogger.cc \
+	DataLogger.h
 $O/JammerApp.o: JammerApp.cc \
 	$(INET_PROJ)/src/inet/common/Compat.h \
 	$(INET_PROJ)/src/inet/common/INETDefs.h \
@@ -164,14 +166,12 @@ $O/PositionReporter.o: PositionReporter.cc \
 	$(INET_PROJ)/src/inet/common/geometry/common/Coord.h \
 	$(INET_PROJ)/src/inet/common/geometry/common/EulerAngles.h \
 	$(INET_PROJ)/src/inet/features.h \
+	$(INET_PROJ)/src/inet/linklayer/common/Ieee802Ctrl.h \
+	$(INET_PROJ)/src/inet/linklayer/common/Ieee802Ctrl_m.h \
 	$(INET_PROJ)/src/inet/linklayer/common/MACAddress.h \
-	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo.h \
-	$(INET_PROJ)/src/inet/linklayer/common/SimpleLinkLayerControlInfo_m.h \
 	$(INET_PROJ)/src/inet/linklayer/contract/IMACProtocolControlInfo.h \
 	$(INET_PROJ)/src/inet/mobility/contract/IMobility.h \
+	DataLogger.h \
 	PositionPacket_m.h \
-	PositionReporter.h \
-	dumper.h
-$O/dumper.o: dumper.cc \
-	dumper.h
+	PositionReporter.h
 

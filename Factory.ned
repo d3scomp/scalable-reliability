@@ -14,7 +14,7 @@
 //
 
 import inet.environment.common.PhysicalEnvironment;
-import inet.physicallayer.ieee802154.packetlevel.Ieee802154NarrowbandScalarRadioMedium;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
 
 network Factory
 {
@@ -30,7 +30,7 @@ network Factory
                 @display("p=0,0");
         }
 
-        radioMedium: Ieee802154NarrowbandScalarRadioMedium {
+        radioMedium: Ieee80211ScalarRadioMedium {
             parameters:
                 @display("p=15,15");
         }
@@ -41,9 +41,10 @@ network Factory
             @display("p=291,60");
         }
         
-        dumper: Dumper {
+        delaysLogger: DataLogger {
+            name = "delays";
         }
-        
+                
         jammers[numJammers]: Jammer;
 
 	connections allowunconnected:
