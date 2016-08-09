@@ -6,3 +6,4 @@ scalable-reliability.exe
 /.tkenvlog
 /scripts/.idea
 *Packet_m*
+Makefile
