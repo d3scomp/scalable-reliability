@@ -57,8 +57,8 @@ def print_delays(file, box_lattencies):
 	print("Storing png")
 	fig.savefig(file + ".png", dpi=256, width=20, wight=15)
 
-	print("Storing eps")
-	fig.savefig(file + ".eps")
+	print("Storing pdf")
+	fig.savefig(file + ".pdf")
 
 
 def print_speeds(file, speeds):
@@ -70,8 +70,8 @@ def print_speeds(file, speeds):
 	ax.hist(speeds, 100)
 	print("Storing png")
 	fig.savefig(file + ".speedhist.png", dpi=256, width=20, wight=15)
-	print("Storing eps")
-	fig.savefig(file + ".speedhist.eps")
+	print("Storing pdf")
+	fig.savefig(file + ".speedhist.pdf")
 
 
 def process_log_file(file: str):
