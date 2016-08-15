@@ -14,7 +14,7 @@
 // 
 
 import inet.mobility.single.GaussMarkovMobility;
-import inet.linklayer.ieee802154.Ieee802154NarrowbandNic;
+import inet.linklayer.ieee80211.Ieee80211Nic;
 
 //
 // Robot
@@ -26,7 +26,6 @@ module Jammer {
         
 	gates:
 		input radio80211In @directIn;
-		input radio802154In @directIn;
 		inout direct[];
 
     submodules:
@@ -38,14 +37,15 @@ module Jammer {
 		    	speed = 50mps;
 		}
 		
-		nic802154: Ieee802154NarrowbandNic {}
+		nic80211: Ieee80211Nic;
 		
 		jammer: JammerApp {
 			parameters:
 			    periodMs = default(30);
+			    packetSize = default(128);
 		}
 	
 	connections allowunconnected:
-		nic802154.upperLayerOut --> jammer.lower802154LayerIn;
-		nic802154.upperLayerIn <-- jammer.lower802154LayerOut;
+		nic80211.upperLayerOut --> jammer.lowerLayerIn;
+		nic80211.upperLayerIn <-- jammer.lowerLayerOut;
 }

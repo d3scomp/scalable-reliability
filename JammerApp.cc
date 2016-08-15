@@ -16,7 +16,7 @@
 #include <cstdlib>
 
 #include <inet/linklayer/common/MACAddress.h>
-#include <inet/linklayer/common/SimpleLinkLayerControlInfo.h>
+#include <inet/linklayer/common/Ieee802Ctrl.h>
 
 #include "JammerPacket_m.h"
 #include "JammerApp.h"
@@ -25,8 +25,9 @@ Define_Module(JammerApp);
 
 void JammerApp::initialize() {
     periodMs = par("periodMs");
+    packetSize = par("packetSize");
 
-    lower802154LayerOut = findGate("lower802154LayerOut");
+    lowerLayerOut = findGate("lowerLayerOut");
 
     this->scheduleAt(getNextJammingTime(), &event);
 
@@ -34,17 +35,17 @@ void JammerApp::initialize() {
 }
 
 SimTime JammerApp::getNextJammingTime() {
-    double next = ((double)(std::rand() % periodMs)) / 1000.0;
-    return simTime() + next;
+    return simTime() + SimTime(std::rand() % periodMs, SIMTIME_MS);
 }
 
 void JammerApp::handleMessage(cMessage *msg) {
     if(msg == &event) {
         JammerPacket *packet = new JammerPacket();
-        inet::SimpleLinkLayerControlInfo* ctrl = new inet::SimpleLinkLayerControlInfo();
+        inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
         ctrl->setDest(inet::MACAddress::BROADCAST_ADDRESS);
         packet->setControlInfo(ctrl);
-        send(packet, lower802154LayerOut);
+        packet->setByteLength(packetSize);
+        send(packet, lowerLayerOut);
         this->scheduleAt(getNextJammingTime(), msg);
     } else {
         delete msg;

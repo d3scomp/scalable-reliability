@@ -32,9 +32,10 @@ protected:
 private:
     cMessage event;
     int periodMs;
+    int packetSize;
 
     SimTime getNextJammingTime();
-    int lower802154LayerOut;
+    int lowerLayerOut;
 };
 
 #endif
