@@ -14,7 +14,7 @@ def get_speed(name, colliders):
 		my_max_speed = 5
 
 	period = 0.030
-	deceleration = 5
+	deceleration = 10
 
 	resulting_speed = my_max_speed
 
@@ -67,7 +67,7 @@ def print_speeds(file, speeds):
 	ax = fig.add_subplot(111)
 	ax.set_xlabel("Robot speed in meters per second")
 	ax.set_ylabel("Samples")
-	ax.hist(speeds, 100)
+	ax.hist(speeds, 5)
 	print("Storing png")
 	fig.savefig(file + ".speedhist.png", dpi=256, width=20, wight=15)
 	print("Storing pdf")
@@ -129,6 +129,9 @@ def process_log_file(file: str):
 def process():
 	for file in os.listdir("../logs"):
 		if file.endswith(".txt") and file.startswith("delays"):
-			process_log_file("../logs/" + file)
+			try:
+				process_log_file("../logs/" + file)
+			except Exception as e:
+				print("Processing failed")
 
 process()
