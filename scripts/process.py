@@ -34,8 +34,8 @@ def print_delays(file, box_lattencies):
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
 
-	ax.set_xlabel("Distance in meters")
-	ax.set_ylabel("Lattency in seconds")
+	ax.set_xlabel("Distance (meters)")
+	ax.set_ylabel("Lattency (seconds)")
 
 	# ax.plot(distancies, lattencies, 'bo')
 
@@ -49,6 +49,9 @@ def print_delays(file, box_lattencies):
 		else:
 			data.append([])
 		ticks.append(key)
+
+	hline = ax.axhline(y = 0.072)
+	hline.set_color("red")
 
 	ax.boxplot(data, positions=range(0, len(data)), patch_artist=True, manage_xticks=False)
 
@@ -65,9 +68,9 @@ def print_speeds(file, speeds):
 	# Speeds hist
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
-	ax.set_xlabel("Robot speed in meters per second")
-	ax.set_ylabel("Samples")
-	ax.hist(speeds, 5)
+	ax.set_xlabel("Robot speed (meters per second)")
+	ax.set_ylabel("Relative frequency")
+	ax.hist(speeds, 5, normed = True)
 	print("Storing png")
 	fig.savefig(file + ".speedhist.png", dpi=256, width=20, wight=15)
 	print("Storing pdf")
