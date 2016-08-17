@@ -29,7 +29,9 @@ def get_speed(name, colliders):
 	return resulting_speed
 
 
-def print_delays(file, box_lattencies):
+def print_delays(name, box_lattencies):
+	deadline = 0.072
+
 	# Delays
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
@@ -50,7 +52,7 @@ def print_delays(file, box_lattencies):
 			data.append([])
 		ticks.append(key)
 
-	hline = ax.axhline(y = 0.072)
+	hline = ax.axhline(y = deadline)
 	hline.set_color("red")
 
 	ax.boxplot(data, positions=range(0, len(data)), patch_artist=True, manage_xticks=False)
@@ -58,23 +60,25 @@ def print_delays(file, box_lattencies):
 	plot.xlim(-1, maxdist)
 
 	print("Storing png")
-	fig.savefig(file + ".png", dpi=256, width=20, wight=15)
+	fig.savefig(name + ".lattency.png", dpi=256, width=20, wight=15)
 
 	print("Storing pdf")
-	fig.savefig(file + ".pdf")
+	fig.savefig(name + ".lattency.pdf")
 
 
-def print_speeds(file, speeds):
+def print_speeds(name, speeds):
 	# Speeds hist
 	fig = plot.figure()
 	ax = fig.add_subplot(111)
 	ax.set_xlabel("Robot speed (meters per second)")
 	ax.set_ylabel("Relative frequency")
 	ax.hist(speeds, 5, normed = True)
+	ax.set_ylim([0, 1])
+
 	print("Storing png")
-	fig.savefig(file + ".speedhist.png", dpi=256, width=20, wight=15)
+	fig.savefig(name + ".speedhist.png", dpi=256, width=20, wight=15)
 	print("Storing pdf")
-	fig.savefig(file + ".speedhist.pdf")
+	fig.savefig(name + ".speedhist.pdf")
 
 
 def process_log_file(file: str):
@@ -124,6 +128,8 @@ def process_log_file(file: str):
 
 	print("Processing " + file)
 
+	name = file.replace(".txt", "")
+
 	print_delays(file, boxLattencies)
 
 	print_speeds(file, speeds)
@@ -131,7 +137,7 @@ def process_log_file(file: str):
 
 def process():
 	for file in os.listdir("../logs"):
-		if file.endswith(".txt") and file.startswith("delays"):
+		if file.endswith(".txt"):
 			try:
 				process_log_file("../logs/" + file)
 			except Exception as e:
