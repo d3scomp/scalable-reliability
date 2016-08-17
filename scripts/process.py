@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 matplotlib.rcParams['agg.path.chunksize'] = 10000
 import matplotlib.pyplot as plot
+from matplotlib.ticker import FuncFormatter
 
 
 def get_speed(name, colliders):
@@ -43,7 +44,7 @@ def print_delays(name, box_lattencies):
 
 	data = []
 	ticks = []
-	maxdist = max(box_lattencies.keys())
+	maxdist = 25# max(box_lattencies.keys())
 
 	for key in range(0, maxdist):
 		if key in box_lattencies:
@@ -60,10 +61,10 @@ def print_delays(name, box_lattencies):
 	plot.xlim(-1, maxdist)
 
 	print("Storing png")
-	fig.savefig(name + ".lattency.png", dpi=256, width=20, wight=15)
+	fig.savefig(name + "_lattency.png", dpi=256, width=20, wight=15)
 
 	print("Storing pdf")
-	fig.savefig(name + ".lattency.pdf")
+	fig.savefig(name + "_lattency.pdf")
 
 
 def print_speeds(name, speeds):
@@ -72,13 +73,16 @@ def print_speeds(name, speeds):
 	ax = fig.add_subplot(111)
 	ax.set_xlabel("Robot speed (meters per second)")
 	ax.set_ylabel("Relative frequency")
-	ax.hist(speeds, 5, normed = True)
+
+	ax.hist(speeds, 10, normed=False, weights=[1 / len(speeds) for s in speeds])
 	ax.set_ylim([0, 1])
 
+	ax.yaxis.set_major_formatter(FuncFormatter(lambda y, pos: str(int(y * 100)) + "%"))
+
 	print("Storing png")
-	fig.savefig(name + ".speedhist.png", dpi=256, width=20, wight=15)
+	fig.savefig(name + "_speedhist.png", dpi=256, width=20, wight=15)
 	print("Storing pdf")
-	fig.savefig(name + ".speedhist.pdf")
+	fig.savefig(name + "_speedhist.pdf")
 
 
 def process_log_file(file: str):
@@ -130,9 +134,9 @@ def process_log_file(file: str):
 
 	name = file.replace(".txt", "")
 
-	print_delays(file, boxLattencies)
+	print_delays(name, boxLattencies)
 
-	print_speeds(file, speeds)
+	print_speeds(name, speeds)
 
 
 def process():
@@ -142,5 +146,6 @@ def process():
 				process_log_file("../logs/" + file)
 			except Exception as e:
 				print("Processing failed")
+				print(e)
 
 process()
