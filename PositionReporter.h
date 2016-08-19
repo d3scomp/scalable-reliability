@@ -45,6 +45,7 @@ private:
     int periodMs;
     bool printReports;
     bool report;
+    const double t_host_s = 0.005;
 
     static int nextOffsetMs;
     static std::default_random_engine *random;

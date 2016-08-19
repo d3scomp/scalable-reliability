@@ -134,7 +134,7 @@ void PositionReporter::collectDelays() {
     for (auto& kv : others) {
         Info other = kv.second;
 
-        double lattency = time - other.time;
+        double lattency = time - other.time + t_host_s;
 
         // Distance from data packet
         double dx = other.x - position.x;
