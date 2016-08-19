@@ -61,10 +61,10 @@ def print_delays(name, box_lattencies):
 	plot.xlim(-1, maxdist)
 
 	print("Storing png")
-	fig.savefig(name + "_lattency.png", dpi=256, width=20, wight=15)
+	fig.savefig(name + "_latency.png", dpi=256, width=20, wight=15)
 
 	print("Storing pdf")
-	fig.savefig(name + "_lattency.pdf")
+	fig.savefig(name + "_latency.pdf")
 
 
 def print_speeds(name, speeds):
