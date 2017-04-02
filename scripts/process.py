@@ -38,7 +38,7 @@ def print_delays(name, box_lattencies):
 	ax = fig.add_subplot(111)
 
 	ax.set_xlabel("Distance (meters)")
-	ax.set_ylabel("Lattency (seconds)")
+	ax.set_ylabel("Latency (seconds)")
 
 	# ax.plot(distancies, lattencies, 'bo')
 
